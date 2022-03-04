@@ -1,4 +1,5 @@
 extern crate postgres;
+extern crate itertools;
 
 pub mod spreadsheet;
 

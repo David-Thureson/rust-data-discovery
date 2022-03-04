@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use super::survey_sql::split_column_names_postgres;
 
 pub fn main() {
 }
@@ -8,7 +9,7 @@ pub fn spreadsheet_to_sql_survey() {
 }
 
 pub fn gen_formula_sql_insert(table_name: &str, column_list_ref: &str, start_row: usize, columns: &str) -> String {
-    let columns= pg_split_column_names(columns);
+    let columns= split_column_names_postgres(columns);
     let column_list = columns.iter()
         .join(", ");
     let column_refs = get_column_letters(columns.len() as u8).iter()
@@ -24,23 +25,13 @@ pub fn gen_formula_sql_insert(table_name: &str, column_list_ref: &str, start_row
 }
 
 pub fn gen_pg_create_table(table_name: &str, columns: &str) {
-    let columns= pg_split_column_names(columns);
+    let columns= split_column_names_postgres(columns);
     println!("\ncreate table {} (", table_name);
     for (index, column_name) in columns.iter().enumerate() {
         let comma = if index == columns.len() - 1 { "" } else { "," };
         println!("\t{} varchar(100){}", column_name, comma);
     }
     println!(")\n");
-}
-
-fn pg_split_column_names(columns: &str) -> Vec<String> {
-    let columns = columns.split('\t').map(|col| col.to_string()).collect::<Vec<_>>();
-    for column in columns.iter() {
-        if column.contains(" ") {
-            panic!("Column \"{}\" contains an illegal character.", column);
-        }
-    }
-    columns
 }
 
 fn get_column_letters(column_count: u8) -> Vec<String> {
