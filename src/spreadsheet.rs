@@ -3,6 +3,10 @@ use itertools::Itertools;
 pub fn main() {
 }
 
+pub fn spreadsheet_to_sql_survey() {
+
+}
+
 pub fn gen_formula_sql_insert(table_name: &str, column_list_ref: &str, start_row: usize, columns: &str) -> String {
     let columns= pg_split_column_names(columns);
     let column_list = columns.iter()

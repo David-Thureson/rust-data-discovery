@@ -1,9 +1,45 @@
+use postgres::{Client, NoTls};
+use util::rse;
+
+const PATH_SQL: &str = "C:/Projects/Rust/data/data-discovery/sql";
+const FILE_NAME_CREATE_TABLES_POSTGRES: &str = "Survey Create Tables PostgreSQL.sql";
 const TABLE_NAME_COLUMN: &str = "survey_column";
 const TABLE_NAME_COLUMN_VALUE: &str = "survey_column_value";
 const VALUE_NONE: &str = "{none}";
 
 pub fn main() {
 }
+
+pub enum SqlEngine {
+    PostgreSql,
+}
+
+pub fn create_empty_survey(connect: &str) -> Result<(), String> {
+    let mut client = rse!(Client::connect(connect, NoTls))?;
+    //rintln!("client created");
+
+    let sql_file = format!("{}/{}", PATH_SQL, FILE_NAME_CREATE_TABLES_POSTGRES);
+    let sql = util::file::read_file_to_string_r(&sql_file).unwrap();
+    //bg!(&sql);
+    rse!(client.batch_execute(&sql))?;
+    //rintln!("execute done");
+
+    Ok(())
+}
+
+/*
+pub fn connect_postgresql(connect: &str) -> Result<Client, String> {
+    match Client::connect(connect, NoTls) {
+        Ok(client) => {
+            return Ok(client);
+        },
+        Err(e) =>
+    }
+
+
+    client
+}
+*/
 
 pub fn gen_fill_columns(columns: &[(&str, &str)]) {
     for (table, column) in columns.iter() {

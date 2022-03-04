@@ -1,3 +1,5 @@
+extern crate postgres;
+
 pub mod spreadsheet;
 
 pub mod survey_sql;
